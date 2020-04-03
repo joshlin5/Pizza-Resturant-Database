@@ -1,9 +1,9 @@
 CREATE TABLE TOPPING
 	(Name			VARCHAR(20)		NOT NULL,
-	Inventory		INT,
 	Price			DECIMAL(3,2)		NOT NULL,
 	Cost			DECIMAL(3,2)		NOT NULL,
-	Personal_Amt		DECIMAL(3,2),
+	Inventory		INT,
+	Small_Amt		DECIMAL(3,2),
 	Medium_Amt		DECIMAL(3,2),
 	Large_Amt		DECIMAL(3,2),
 	XLarge_Amt		DECIMAL(3,2),
