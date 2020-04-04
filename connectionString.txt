@@ -1,3 +1,5 @@
+Submission for Daniel Smith (dnsmith) and Joshua Lin (jlin5)
+
 Connection String:
 mysql -h mysql1.cs.clemson.edu -u uauajzno -p SmithAndLinPizzeria_2xh5
 Username: uauajzno
