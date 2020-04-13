@@ -112,7 +112,7 @@ public final class DBNinja {
         stmt.setDouble(2, o.calcPrice());
         stmt.setDouble(3, o.calcCost());
         try {
-            ResultSet rset = stmt.executeUpdate(insert);
+            stmt.executeUpdate(insert);
         }
         catch (SQLException e) {
             System.out.println("Error inserting order");
@@ -148,7 +148,7 @@ public final class DBNinja {
                 stmt.setInt(2, OID);
                 stmt.setInt(3, cust.getTableNum());
                 try {
-                    ResultSet rset = stmt.executeUpdate(insert);
+                    stmt.executeUpdate(insert);
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting dine in");
@@ -169,7 +169,7 @@ public final class DBNinja {
                     stmt.setInt(1, OID);
                     stmt.setInt(2, seat);
                     try {
-                        ResultSet rset = stmt.executeUpdate(insert);
+                        stmt.executeUpdate(insert);
                     }
                     catch (SQLException e) {
                         System.out.println("Error inserting seat num");
@@ -204,7 +204,7 @@ public final class DBNinja {
                 stmt.setInt(2, OID);
                 stmt.setInt(3, cust.getID());
                 try {
-                    ResultSet rset = stmt.executeUpdate(insert);
+                    stmt.executeUpdate(insert);
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting pick up");
@@ -238,7 +238,7 @@ public final class DBNinja {
                 stmt.setInt(2, OID);
                 stmt.setInt(3, cust.getID());
                 try {
-                    ResultSet rset = stmt.executeUpdate(insert);
+                    stmt.executeUpdate(insert);
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting delivery");
@@ -274,6 +274,9 @@ public final class DBNinja {
         /*
         *   4. Add pizzas (and therefore toppings and discounts)
         *   TODO
+
+
+        stmt.close(); ???
         */
 
         conn.close();
@@ -337,7 +340,7 @@ public final class DBNinja {
         }
 
         try {
-            ResultSet rset = stmt.executeUpdate(insert);
+            stmt.executeUpdate(insert);
         }
         catch (SQLException e) {
             System.out.println("Error inserting customer");
@@ -349,6 +352,7 @@ public final class DBNinja {
             return;
         }
 
+        //stmt.close(); ???
         conn.close();
     }
 
@@ -430,7 +434,7 @@ public final class DBNinja {
 					NOTE: you can't check for NULL until after you have read the value using one of the getters.
 
 					*/
-                int name = rset.getString(1);
+                String name = rset.getString(1);
                 //Now I'm just passing my primary key to this function to get the topping itself individually
                 ts.add(getTopping(name));
             }
