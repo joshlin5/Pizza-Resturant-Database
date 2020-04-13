@@ -112,7 +112,7 @@ public final class DBNinja {
         stmt.setDouble(2, o.calcPrice());
         stmt.setDouble(3, o.calcCost());
         try {
-            stmt.executeUpdate(insert);
+            stmt.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println("Error inserting order");
@@ -148,7 +148,7 @@ public final class DBNinja {
                 stmt.setInt(2, OID);
                 stmt.setInt(3, cust.getTableNum());
                 try {
-                    stmt.executeUpdate(insert);
+                    stmt.executeUpdate();
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting dine in");
@@ -169,7 +169,7 @@ public final class DBNinja {
                     stmt.setInt(1, OID);
                     stmt.setInt(2, seat);
                     try {
-                        stmt.executeUpdate(insert);
+                        stmt.executeUpdate();
                     }
                     catch (SQLException e) {
                         System.out.println("Error inserting seat num");
@@ -204,7 +204,7 @@ public final class DBNinja {
                 stmt.setInt(2, OID);
                 stmt.setInt(3, cust.getID());
                 try {
-                    stmt.executeUpdate(insert);
+                    stmt.executeUpdate();
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting pick up");
@@ -238,7 +238,7 @@ public final class DBNinja {
                 stmt.setInt(2, OID);
                 stmt.setInt(3, cust.getID());
                 try {
-                    stmt.executeUpdate(insert);
+                    stmt.executeUpdate();
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting delivery");
@@ -340,7 +340,7 @@ public final class DBNinja {
         }
 
         try {
-            stmt.executeUpdate(insert);
+            stmt.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println("Error inserting customer");
