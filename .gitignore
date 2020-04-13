@@ -1,4 +1,5 @@
 *.vs*
+*.class
 StarterCode/lib/mysql-connector-java-5.1.42/src/doc/sources/.classpath
 StarterCode/lib/mysql-connector-java-5.1.42/src/doc/sources/.project
 StarterCode/lib/mysql-connector-java-5.1.42/src/doc/sources/.settings/

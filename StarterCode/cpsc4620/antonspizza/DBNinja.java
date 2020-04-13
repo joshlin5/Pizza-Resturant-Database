@@ -320,13 +320,15 @@ public final class DBNinja {
         }
         else if(c instanceof DineOutCustomer)
         {
-            DineOutCustomer cust = (DineOutCustomer)c;
+            System.out.println("this is a dine out customer YOLOLOL");
+				DineOutCustomer cust = (DineOutCustomer)c;
             stmt.setString(2, cust.getName());
             stmt.setString(3, cust.getPhone());
             stmt.setNull(4, java.sql.Types.VARCHAR);
         }
         else if(c instanceof DeliveryCustomer)
         {
+			   System.out.println("this is a delivery customer YEEEEET");
             DeliveryCustomer cust = (DeliveryCustomer)c;
             stmt.setString(2, cust.getName());
             stmt.setString(3, cust.getPhone());
