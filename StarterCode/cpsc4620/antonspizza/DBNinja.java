@@ -105,14 +105,14 @@ public final class DBNinja {
         *-/
 
         Stirng insert = "Insert into ORDERS Values (?, ?, ?);";
-        stmt = conn.prepareStatement(insert);
-        stmt.clearParameters();
+        PreparedStatement pstmt = conn.prepareStatement(insert);
+        pstmt.clearParameters();
         int OID = getNextOrderID();
-        stmt.setInt(1, OID);
-        stmt.setDouble(2, o.calcPrice());
-        stmt.setDouble(3, o.calcCost());
+        pstmt.setInt(1, OID);
+        pstmt.setDouble(2, o.calcPrice());
+        pstmt.setDouble(3, o.calcCost());
         try {
-            stmt.executeUpdate();
+            pstmt.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println("Error inserting order");
@@ -142,13 +142,13 @@ public final class DBNinja {
                 List<Integer> seats = cust.getSeats();
 
                 // insert into dine in table
-                stmt = conn.prepareStatement(insert);
-                stmt.clearParameters();
-                stmt.setString(1, DBNinja.dine_in);
-                stmt.setInt(2, OID);
-                stmt.setInt(3, cust.getTableNum());
+                pstmt = conn.prepareStatement(insert);
+                pstmt.clearParameters();
+                pstmt.setString(1, DBNinja.dine_in);
+                pstmt.setInt(2, OID);
+                pstmt.setInt(3, cust.getTableNum());
                 try {
-                    stmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting dine in");
@@ -164,12 +164,12 @@ public final class DBNinja {
                 for(Integer seat : seats)
                 {
                     insert = "Insert into SEAT_NUM Values (?, ?);";
-                    stmt = conn.prepareStatement(insert);
-                    stmt.clearParameters();
-                    stmt.setInt(1, OID);
-                    stmt.setInt(2, seat);
+                    pstmt = conn.prepareStatement(insert);
+                    pstmt.clearParameters();
+                    pstmt.setInt(1, OID);
+                    pstmt.setInt(2, seat);
                     try {
-                        stmt.executeUpdate();
+                        pstmt.executeUpdate();
                     }
                     catch (SQLException e) {
                         System.out.println("Error inserting seat num");
@@ -198,13 +198,13 @@ public final class DBNinja {
                 DineOutCustomer cust = (DineOutCustomer) o.getCustomer();
 
                 // insert into dine in table
-                stmt = conn.prepareStatement(insert);
-                stmt.clearParameters();
-                stmt.setString(1, DBNinja.pickup);
-                stmt.setInt(2, OID);
-                stmt.setInt(3, cust.getID());
+                pstmt = conn.prepareStatement(insert);
+                pstmt.clearParameters();
+                pstmt.setString(1, DBNinja.pickup);
+                pstmt.setInt(2, OID);
+                pstmt.setInt(3, cust.getID());
                 try {
-                    stmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting pick up");
@@ -232,13 +232,13 @@ public final class DBNinja {
                 DeliveryCustomer cust = (DeliveryCustomer) o.getCustomer();
 
                 // insert into dine in table
-                stmt = conn.prepareStatement(insert);
-                stmt.clearParameters();
-                stmt.setString(1, DBNinja.delivery);
-                stmt.setInt(2, OID);
-                stmt.setInt(3, cust.getID());
+                pstmt = conn.prepareStatement(insert);
+                pstmt.clearParameters();
+                pstmt.setString(1, DBNinja.delivery);
+                pstmt.setInt(2, OID);
+                pstmt.setInt(3, cust.getID());
                 try {
-                    stmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
                 catch (SQLException e) {
                     System.out.println("Error inserting delivery");
@@ -276,7 +276,7 @@ public final class DBNinja {
         *   TODO
 
 
-        stmt.close(); ???
+        pstmt.close(); ???
         */
 
         conn.close();
@@ -306,33 +306,33 @@ public final class DBNinja {
         */
 
         String insert = "Insert into CUSTOMER Values (?, ?, ?, ?);";
-        PreparedStatement stmt = conn.prepareStatement(insert);
-        stmt.clearParameters();
+        PreparedStatement pstmt = conn.prepareStatement(insert);
+        pstmt.clearParameters();
         int CID = getNextCustomerID();
-        stmt.setInt(1, CID);
+        pstmt.setInt(1, CID);
 
         // last 3 params depend on type of customer
         if(c instanceof DineInCustomer)
         {
-            stmt.setNull(2, java.sql.Types.VARCHAR);
-            stmt.setNull(3, java.sql.Types.CHAR);
-            stmt.setNull(4, java.sql.Types.VARCHAR);
+            pstmt.setNull(2, java.sql.Types.VARCHAR);
+            pstmt.setNull(3, java.sql.Types.CHAR);
+            pstmt.setNull(4, java.sql.Types.VARCHAR);
         }
         else if(c instanceof DeliveryCustomer)
         {
 			System.out.println("this is a delivery customer YEEEEET");
             DeliveryCustomer cust = (DeliveryCustomer)c;
-            stmt.setString(2, cust.getName());
-            stmt.setString(3, cust.getPhone());
-            stmt.setString(4, cust.getAddress());
+            pstmt.setString(2, cust.getName());
+            pstmt.setString(3, cust.getPhone());
+            pstmt.setString(4, cust.getAddress());
         }
         else if(!(c instanceof DeliveryCustomer) && c instanceof DineOutCustomer)
         {
             System.out.println("this is a dine out customer YOLOLOL");
 			DineOutCustomer cust = (DineOutCustomer)c;
-            stmt.setString(2, cust.getName());
-            stmt.setString(3, cust.getPhone());
-            stmt.setNull(4, java.sql.Types.VARCHAR);
+            pstmt.setString(2, cust.getName());
+            pstmt.setString(3, cust.getPhone());
+            pstmt.setNull(4, java.sql.Types.VARCHAR);
         }
         else
         {
@@ -342,7 +342,7 @@ public final class DBNinja {
         }
 
         try {
-            stmt.executeUpdate();
+            pstmt.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println("Error inserting customer");
@@ -354,7 +354,7 @@ public final class DBNinja {
             return;
         }
 
-        //stmt.close(); ???
+        //pstmt.close(); ???
         conn.close();
     }
 
@@ -370,7 +370,29 @@ public final class DBNinja {
     {
         connect_to_db();
 		/*add code to mark an order as complete in the DB. You may have a boolean field for this, or maybe a completed time timestamp. However you have it, */
-        System.out.println("complete order");
+        /*
+        *   FIXME do some error checking to make sure order exists?
+        *   1. get OID
+        *   2. get pizzas in order
+        *   3. marks pizzas as completed
+        */
+        int OID = o.getID();
+        String update = "Update PIZZA Set Completed = TRUE Where OID = ?;";
+        PreparedStatement pstmt = conn.prepareStatement(update);
+        pstmt.clearParameters();
+        pstmt.setInt(1, OID);
+        try {
+            pstmt.executeUpdate();
+        }
+        catch(SQLException e) {
+            System.out.println("Error completing order");
+            while (e != null) {
+                System.out.println("Message     : " + e.getMessage());
+                e = e.getNextException();
+            }
+            conn.close();
+            return;
+        }
         conn.close();
     }
 
@@ -387,7 +409,35 @@ public final class DBNinja {
     {
         connect_to_db();
 		/*add code to add toAdd to the inventory level of T. This is not adding a new topping, it is adding a certain amount of stock for a topping. This would be used to show that an order was made to replenish the restaurants supply of pepperoni, etc*/
-        System.out.println("add to inventory");
+        /*
+        *   FIXME add error checking that t exists in table?
+        *   1. get topping name
+        *   2. update topping to set inventory level += toAdd 
+        */
+        if(toAdd <= 0)
+        {
+            System.out.println("Please add more than 0 units to the inventory for topping " + t.getName());
+            conn.close();
+            return;
+        }
+        String tname = t.getName();
+        String update = "Update TOPPING Set Inventory = Inventory + ? Where Name = ?;";
+        PreparedStatement pstmt = conn.prepareStatement(update);
+        pstmt.clearParameters();
+        pstmt.setDouble(1, toAdd);
+        pstmt.setString(2, tname);
+        try {
+            pstmt.executeUpdate();
+        }
+        catch(SQLException e) {
+            System.out.println("Error adding to topping inventory");
+            while(e != null) {
+                System.out.println("Message     : " + e.getMessage());
+                e = e.getNextException();
+            }
+            conn.close();
+            return;
+        }
         conn.close();
     }
 
@@ -472,7 +522,29 @@ public final class DBNinja {
 
         ArrayList<Order> os = new ArrayList<Order>();
 		/*add code to get a list of all open orders. Only return Orders that have not been completed. If any pizzas are not completed, then the order is open.*/
-        System.out.println("get current orders");
+        /*
+        *   1. Select query to get OIDs of pizzas which are not completed
+        *   2. Call getOrder on the OIDs and add to arraylist of orders
+        */
+        String query = "Select Distinct OID From PIZZA Where Complete = FALSE;";
+        Statement stmt = conn.createStatement();
+        try {
+            ResultSet rset = stmt.executeQuery(query);
+            while(rset.next())
+            {
+                os.add(getOrder(rset.getInt(1))); // condensed for efficiency
+            }
+        }
+        catch(SQLException e) {
+            System.out.println("Error getting current orders");
+            while(e != null) {
+                System.out.println("Message     : " + e.getMessage());
+                e.getNextException();
+            }
+            conn.close();
+            return os;
+        }
+
         conn.close();
         return os;
     }
@@ -580,8 +652,8 @@ public final class DBNinja {
         return t;
 
     }
-/*
-    private static Discount getDiscount()  throws SQLException, IOException
+
+    private static Discount getDiscount(String name)  throws SQLException, IOException
     {
 
         //add code to get a discount
@@ -592,50 +664,122 @@ public final class DBNinja {
 
     }
 
-    private static Pizza getPizza()  throws SQLException, IOException
+    private static Pizza getPizza(int PID)  throws SQLException, IOException
     {
 
         //add code to get Pizza Remember, a Pizza has toppings and discounts on it
         Pizza P;
 
         return P;
-
     }
 
-    private static ICustomer getCustomer()  throws SQLException, IOException
+    private static ICustomer getCustomer(int CID)  throws SQLException, IOException
     {
-
         //add code to get customer
-
-
         ICustomer C;
 
         return C;
-
-
     }
 
-    private static Order getOrder()  throws SQLException, IOException
+    private static ICustomer getDineInCustomer(int tableNum) throws SQLException, IOException
     {
+        ICustomer C;
 
+        return C;
+    }
+
+    // ********** FIXME make createOrder function? ********** //
+
+    private static Order getOrder(int OID)  throws SQLException, IOException
+    {
         //add code to get an order. Remember, an order has pizzas, a customer, and discounts on it
+        /*
+        *   1. Create Order object with OID, ICustomer, type
+        *   1a. Determine type of order by checking PICK_UP, DINE_IN, DELIVERY tables to get type
+        *   1b. Use type to get ICustomer
+        *   2. Add Pizzas to the Order object
+        *   3. Add Discounts to Order object
+        */
+        Order O = null; // check that Java compiler on unix is ok with this
+        String query = "Select CID From ? Where OID = ?;";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        ArrayList<String> orderTypes = new ArrayList<String>();
+        orderTypes.add(pickup);
+        orderTypes.add(delivery);
+        for(String type : orderTypes)
+        {
+            pstmt.clearParameters();
+            pstmt.setString(1, type);
+            pstmt.setInt(2, OID);
+            try {
+                ResultSet rset = pstmt.executeQuery();
+                if(rset.next())
+                {
+                    System.out.println("found the type of order !!!");
+                    // found the type of order, so create order object and break from loop (condensed for efficiency)
+                    O = new Order(OID, getCustomer(rset.getInt(1)), type);
+                    break;
+                }
+            }
+            catch(SQLException e) {
+                System.out.println("Error CID from " + type);
+                while (e != null) {
+                    System.out.println("Message     : " + e.getMessage());
+                    e = e.getNextException();
+                }
+                conn.close();
+                return O;
+            }
+        }
 
+        // if order type not pickup or delivery but dine in
+        if(O == null)
+        {
+            // get table num, which will allow us to get the customer and seats
+            query = "Select Table_Num From DINE_IN Where OID = ?;";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, OID);
+            try {
+                ResultSet rset = pstmt.executeQuery();
+                if(rset.next())
+                {
+                    // found the dine in order, getting customer is handled by getDineInCustomer (condensed for efficiency)
+                    O = new Order(OID, getDineInCustomer(rset.getInt(1)), dine_in);
+                }
+                else
+                {
+                    // didn't find the dine in order, this is bad
+                    System.out.println("Error OID " + OID + " does not exist in DINE_IN");
+                    conn.close();
+                    return O;
+                }
+            }
+            catch(SQLException e) {
+                System.out.println("Error getting Table_Num from DINE_IN");
+                while (e != null) {
+                    System.out.println("Message     : " + e.getMessage());
+                    e = e.getNextException();
+                }
+                conn.close();
+                return O;
+            }
+        }
 
-        Order O;
+        // 2. get the pizzas
+        // 3. get the discounts
 
         return O;
 
     }
-    */
 
     private static int getNextOrderID() throws SQLException, IOException
     {
         int orderID = -1;
         String query = "Select Max(OID) From ORDERS;";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.clearParameters();
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.clearParameters();
         try {
-            ResultSet rset = stmt.executeQuery();
+            ResultSet rset = pstmt.executeQuery();
             while(rset.next())
             {
                 orderID = rset.getInt(1);
@@ -665,10 +809,10 @@ public final class DBNinja {
     {
         int custID = -1;
         String query = "Select Max(CID) From CUSTOMER;";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.clearParameters();
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.clearParameters();
         try {
-            ResultSet rset = stmt.executeQuery();
+            ResultSet rset = pstmt.executeQuery();
             while(rset.next())
             {
                 custID = rset.getInt(1);

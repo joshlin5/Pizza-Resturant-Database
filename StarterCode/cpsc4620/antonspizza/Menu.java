@@ -231,7 +231,6 @@ public class Menu {
         {
             System.out.println("Please enter the address: ");
             address = reader.readLine();
-            System.out.println("This is the address: " + address);
         }
         /**********************************************************************************
 
@@ -248,12 +247,10 @@ public class Menu {
 
         if(address != "")
         {
-            System.out.println("Creating a delivery customer");
             new_cust = new DeliveryCustomer(-1, name, phone, address);
         }
         else
         {
-            System.out.println("Creating a dine out customer");
             new_cust = new DineOutCustomer(-1, name, phone);
         }
         DBNinja.addCustomer(new_cust);
