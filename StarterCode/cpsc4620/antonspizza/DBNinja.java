@@ -626,7 +626,7 @@ public final class DBNinja {
     }
     */
 
-    private static int getNextOrderID()
+    private static int getNextOrderID() throws SQLException, IOException
     {
         int orderID = -1;
         String query = "Select Max(OID) From ORDERS;";
@@ -659,7 +659,7 @@ public final class DBNinja {
         return orderID;
     }
 
-    private static int getNextCustomerID()
+    private static int getNextCustomerID() throws SQLException, IOException
     {
         int custID = -1;
         String query = "Select Max(CID) From CUSTOMER;";
