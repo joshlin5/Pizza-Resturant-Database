@@ -302,8 +302,8 @@ public final class DBNinja {
         *   2b. Add customer to DB
         */
 
-        Stirng insert = "Insert into CUSTOMER Values (?, ?, ?, ?);";
-        stmt = conn.prepareStatement(insert);
+        String insert = "Insert into CUSTOMER Values (?, ?, ?, ?);";
+        PreparedStatement stmt = conn.prepareStatement(insert);
         stmt.clearParameters();
         int CID = getNextCustomerID();
         stmt.setInt(1, CID);
