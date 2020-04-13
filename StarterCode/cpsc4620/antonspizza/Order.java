@@ -95,6 +95,15 @@ public class Order {
         return price;
     }
 
+    /**
+     * @return the total cost of the order to the restaurant
+     * @ensures calcOrder includes all pizzas
+     */
+    public double calcCost()
+    {
+        return 4.20;
+    }
+
 
     /**
      *

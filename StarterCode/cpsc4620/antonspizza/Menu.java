@@ -240,7 +240,7 @@ public class Menu {
 
 
          ***********************************************************************************/
-        System.out.println("Please Enter the Customer phone number: ");
+        System.out.println("Please Enter the Customer phone number (FORMAT 123-456-7890): ");
         String phone = reader.readLine();
 
         ICustomer new_cust;
