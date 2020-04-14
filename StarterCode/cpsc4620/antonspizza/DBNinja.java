@@ -4,6 +4,8 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import sun.jvm.hotspot.debugger.ReadResult;
+
 /*
 This file is where most of your code changes will occur
 You will write the code to retrieve information from the database, or save information to the database
@@ -658,7 +660,7 @@ public final class DBNinja {
 
         //add code to get a discount
 
-        Discount D;
+        Discount D = new Discount(name, 4.20, 6.9, -1);
 
         return D;
 
@@ -668,27 +670,91 @@ public final class DBNinja {
     {
 
         //add code to get Pizza Remember, a Pizza has toppings and discounts on it
-        Pizza P;
+        Pizza P = new Pizza(PID, size_s, crust_orig, 6.9);
 
         return P;
     }
 
+    // for pickup and delivery customers
     private static ICustomer getCustomer(int CID)  throws SQLException, IOException
     {
+        if(CID == -1)
+        {
+            System.out.println("Error searching for Pickup or Delivery Customer. CID is -1, which indicates a Dine In Customer");
+            return null;
+        }
         //add code to get customer
-        ICustomer C;
+        ICustomer C = null;
+        String query = "Select Name, Phone_Num, Address From CUSTOMER Where CID = ?;";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.clearParameters();
+        pstmt.setInt(1, CID);
+        try {
+            ResultSet rset = pstmt.executeQuery();
+            if(rset.next()) // cid is primary key, so should be unique
+            {
+                String name = rset.getString(1);
+                String phone = rset.getString(2);
+                String address = rset.getString(3);
+                if(rset.wasNull()) // null address indicates pickup customer
+                {
+                    C = new DineOutCustomer(CID, name, phone);
+                }
+                else
+                {
+                    C = new DeliveryCustomer(CID, name, phone, address);
+                }
+            }
+            else
+            {
+                System.out.println("Error could not get Customer with CID " + Integer.toString(CID));
+                //conn.close();
+            }
+        }
+        catch(SQLException e) {
+            System.out.println("Error getting Customer with CID " + Integer.toString(CID));
+            while (e != null) {
+                System.out.println("Message     : " + e.getMessage());
+                e = e.getNextException();
+            }
+            conn.close();
+            return C;
+        }
 
         return C;
     }
 
-    private static ICustomer getDineInCustomer(int tableNum) throws SQLException, IOException
+    // for dine in customers
+    private static ICustomer getDineInCustomer(int tableNum, int OID) throws SQLException, IOException
     {
-        ICustomer C;
+        ICustomer C = null;
+        List<Integer> seats = new ArrayList<>();
+        String query = "Select Seat_Num From SEAT_NUM Where OID = ?;";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.clearParameters();
+        pstmt.setInt(1, OID);
+        try {
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next())
+            {
+                seats.add(rset.getInt(1));
+            }
+        }
+        catch(SQLException e) {
+            System.out.println("Error getting Customer with table_num " + Integer.toString(tableNum) + " and order id " + Integer.toString(OID));
+            while (e != null) {
+                System.out.println("Message     : " + e.getMessage());
+                e = e.getNextException();
+            }
+            conn.close();
+            return C;
+        }
 
+        C = new DineInCustomer(tableNum, seats, -1);
         return C;
     }
 
-    // ********** FIXME make createOrder function? ********** //
+    // ********** FIXME make a createOrder function? ********** //
 
     private static Order getOrder(int OID)  throws SQLException, IOException
     {
@@ -741,16 +807,17 @@ public final class DBNinja {
             pstmt.setInt(1, OID);
             try {
                 ResultSet rset = pstmt.executeQuery();
-                if(rset.next())
+                if(rset.next()) // there should only be one
                 {
                     // found the dine in order, getting customer is handled by getDineInCustomer (condensed for efficiency)
-                    O = new Order(OID, getDineInCustomer(rset.getInt(1)), dine_in);
+                    System.out.println("found the dine in customer !!!");
+                    O = new Order(OID, getDineInCustomer(rset.getInt(1), OID), dine_in);
                 }
                 else
                 {
                     // didn't find the dine in order, this is bad
                     System.out.println("Error OID " + OID + " does not exist in DINE_IN");
-                    conn.close();
+                    //conn.close();
                     return O;
                 }
             }
@@ -766,7 +833,48 @@ public final class DBNinja {
         }
 
         // 2. get the pizzas
+        query = "Select PID From PIZZA Where OID = ?;";
+        pstmt = conn.prepareStatement(query);
+        pstmt.clearParameters();
+        pstmt.setInt(1, OID);
+        try {
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next())
+            {
+                O.addPizza(getPizza(rset.getInt(1))); // add pizza to order
+            }
+        }
+        catch(SQLException e) {
+            System.out.println("Error getting pizza id");
+            while (e != null) {
+                System.out.println("Message     : " + e.getMessage());
+                e = e.getNextException();
+            }
+            conn.close();
+            return O;
+        }
+
         // 3. get the discounts
+        query = "Select Dname From APPLIES_ORDER Where OID = ?;";
+        pstmt = conn.prepareStatement(query);
+        pstmt.clearParameters();
+        pstmt.setInt(1, OID);
+        try {
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next())
+            {
+                O.addDiscount(getDiscount(rset.getString(1))); // add discount to order
+            }
+        }
+        catch(SQLException e) {
+            System.out.println("Error getting discount name");
+            while (e != null) {
+                System.out.println("Message     : " + e.getMessage());
+                e = e.getNextException();
+            }
+            conn.close();
+            return O;
+        }
 
         return O;
 
