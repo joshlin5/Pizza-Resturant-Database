@@ -564,6 +564,13 @@ public final class DBNinja {
         connect_to_db();
         double bp = 0.0;
         //add code to get the base price for that size and crust pizza Depending on how you store size and crust in your database, you may have to do a conversion
+        String stm1 = "select Price from BASE_PRICE where Size = ? && Crust_Type = ?";
+        PreparedStatement p = conn.prepareStatement(smt1);
+        p.clearParameters();
+        p.setString(size, crust);
+        ResultSet r = p.executeQuery();
+        r.next();
+        bp = r.getDouble(1);
         System.out.println("get base price");
         conn.close();
         return bp;
@@ -579,8 +586,17 @@ public final class DBNinja {
     public static ArrayList<Discount> getDiscountList() throws SQLException, IOException
     {
         ArrayList<Discount> discs = new ArrayList<Discount>();
+        String name;
         connect_to_db();
         //add code to get a list of all discounts
+        String stm1 = "select Name from DISCOUNT";
+        PreparedStatement p = conn.prepareStatement(smt1);
+        p.clearParameters();
+        ResultSet r = p.executeQuery();
+        while(r.next()) {
+            name = r.getString(1);
+            discs.add(getDiscount(name));
+        }
         System.out.println("get discount list");
         conn.close();
         return discs;
@@ -596,8 +612,17 @@ public final class DBNinja {
     public static ArrayList<ICustomer> getCustomerList() throws SQLException, IOException
     {
         ArrayList<ICustomer> custs = new ArrayList<ICustomer>();
+        int CID
         connect_to_db();
         //add code to get a list of all customers
+        String stm1 = "select CID from CUSTOMER";
+        PreparedStatement p = conn.prepareStatement(smt1);
+        p.clearParameters();
+        ResultSet r = p.executeQuery();
+        while(r.next()) {
+            CID = r.getInt(1);
+            custs.add(getCustomer(CID));
+        }
         System.out.println("get customer list");
         conn.close();
         return custs;
@@ -658,7 +683,7 @@ public final class DBNinja {
 
         //add code to get a discount
 
-        Discount D = new Discount(name, 4.20, 6.9, -1);
+        Discount D = new Discount(name, 4.20, 6.9);
 
         return D;
 

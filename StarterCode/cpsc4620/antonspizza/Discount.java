@@ -19,7 +19,6 @@ public class Discount {
     private String name;
     private double percent_off;
     private double cash_off;
-    private int ID;
 
     /**
      *
@@ -31,12 +30,11 @@ public class Discount {
      *          0 <= c
      *          i = -1 || a valid ID in the database
      */
-    public Discount(String n, double p, double c, int i)
+    public Discount(String n, double p, double c)
     {
         name = n;
         percent_off = p;
         cash_off = c;
-        ID = i;
     }
 
     /**
@@ -67,16 +65,6 @@ public class Discount {
     public double getCashDisc()
     {
         return cash_off;
-    }
-
-    /**
-     *
-     * @return the discount id
-     * @ensures getID = ID
-     */
-    public int getID()
-    {
-        return ID;
     }
 
     //Returns true if the discount is a percentage
